@@ -12,6 +12,7 @@ const HomeScreen = () => {
     const fetchProducts = async () => {
       const { data } = await axios.get('/api/products')
 
+      console.log(data)
       setProducts(data)
     }
 
@@ -24,7 +25,7 @@ const HomeScreen = () => {
       <Row>
         {products.map(product => (
           <Col sm={12} md={6} lg={4} xl={3}>
-            <Product product={product} />
+            <Product product={product} key={product._id}/>
           </Col>
         ))}
       </Row>

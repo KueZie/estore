@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema({
   //   required: true,
   //   ref: "User"
   // },
+  _id: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
@@ -76,4 +80,5 @@ const productSchema = new mongoose.Schema({
     timestamps: true
   });
 
-const Product = mongoose.model("Product", productSchema);
+export const Product = mongoose.model("Product", productSchema);
+export const Review = mongoose.model("Review", reviewSchema);

@@ -2,14 +2,13 @@ import { apiSlice } from "./apiSlice";
 
 export const productSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query({
+    getProducts: builder.query<Product[], void>({
       query: () => '/products',
     }),
-    getProductById: builder.query({
+    getProductById: builder.query<Product, number>({
       query: (id) => `/products/${id}`,
     }),
   }),
-  keepUnusedDataFor: 5,
 });
 
 export const { useGetProductsQuery, useGetProductByIdQuery } = productSlice;

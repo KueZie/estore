@@ -2,6 +2,9 @@ import { Row, Col } from 'react-bootstrap'
 import Product from '../components/Product'
 import { useGetProductsQuery } from '../slices/productSlice'
 import Loader from '../components/Loader'
+import Message from '../components/Message'
+import { SerializedError } from '@reduxjs/toolkit'
+import React from 'react'
 
 
 const HomeScreen = () => {
@@ -10,7 +13,10 @@ const HomeScreen = () => {
   return (
     <>
       { isLoading ? (<Loader />)
-        : error ? (<h3>{error?.data?.message || error.error}</h3>)
+        : error ? (<Message variant='danger'>
+            {'error' in error ? error.error : (error as SerializedError)?.message}
+          </Message>)
+          : products === undefined ? (<Message variant='danger'>No products found</Message>)
           : (<>
         <h1>Latest Products</h1>
         <Row>

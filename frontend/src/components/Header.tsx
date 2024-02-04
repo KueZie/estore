@@ -2,7 +2,7 @@ import { Navbar, Nav, Container } from 'react-bootstrap'
 import { FaShoppingCart, FaUser } from 'react-icons/fa'
 import { LinkContainer } from 'react-router-bootstrap'
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
+import React from 'react'
 
 const Header = () => {
   return (

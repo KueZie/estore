@@ -15,6 +15,8 @@ connectDB(); // Connect Database
 
 const app = express();
 
+app.use(express.json()); // Body parser
+
 app.get('/', (req, res) => {
   res.send('API is running...')
 })

@@ -30,3 +30,10 @@ export type CartState = {
   taxPrice: string;
   totalPrice: string;
 };
+
+export type User = {
+  _id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+};

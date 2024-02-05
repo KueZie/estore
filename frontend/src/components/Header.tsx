@@ -8,6 +8,7 @@ import { RootState } from '../store'
 
 const Header = () => {
   const cartItems = useSelector((state: RootState) => state.cart.cartItems ?? [])
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo)
 
   return (
     <header>
@@ -36,9 +37,19 @@ const Header = () => {
                   )}
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to='/login'>
-                <Nav.Link ><FaUser /> Sign In</Nav.Link>
-              </LinkContainer>
+              {userInfo ? (<>
+                <LinkContainer to='/profile'>
+                  <Nav.Link>Profile</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to='/logout'>
+                  <Nav.Link><FaUser /> Sign Out</Nav.Link>
+                </LinkContainer>
+              </>
+              ) : (
+                <LinkContainer to='/login'>
+                  <Nav.Link ><FaUser /> Sign In</Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

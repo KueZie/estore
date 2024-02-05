@@ -1,10 +1,11 @@
 import { Card } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import Rating from "./Rating"
+import { ProductInfo } from '../types'
 import React from "react"
 
 interface ProductProps {
-  product: Product
+  product: ProductInfo
 }
 
 const Product = ({product}: ProductProps) => {

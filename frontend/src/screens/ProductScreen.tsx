@@ -23,7 +23,7 @@ const ProductScreen = () => {
 
   const addToCartHandler = () => {
     if (product === undefined) return
-    dispatch(addToCart({ productId: product._id, quantity }))
+    dispatch(addToCart({ ...product, quantity }))
     navigate('/cart')
   }
 

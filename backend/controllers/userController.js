@@ -40,7 +40,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
-  const user = User.create({ name, email, password });
+  const user = await User.create({ name, email, password });
 
   if (user) {
     generateAndSetToken(res, user._id); // Set token in cookie

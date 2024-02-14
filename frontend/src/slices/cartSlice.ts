@@ -27,9 +27,13 @@ const cartSlice = createSlice({
     removeFromCart: (state, action: {payload: string}) => {
       state.cartItems = state.cartItems.filter((x: CartItem) => x.productId !== action.payload)
       updateCart(state)
+    },
+    resetCart: (state) => {
+      state.cartItems = []
+      updateCart(state)
     }
   }
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions
+export const { addToCart, removeFromCart, resetCart } = cartSlice.actions
 export default cartSlice

@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import { User } from "../types";
 import { apiSlice } from "./apiSlice";
 
@@ -10,6 +9,13 @@ const usersSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: { email, password },
       }),
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: '/users/logout',
+        method: 'POST',
+      }),
+      invalidatesTags: ['User'],
     }),
     register: builder.mutation<User, {name: string, email: string, password: string}>({
       query: ({ name, email, password }) => ({
@@ -49,4 +55,4 @@ const usersSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useProfileQuery, useGetUsersQuery, useDeleteUserMutation, useGetUserDetailsQuery, useUpdateUserMutation } = usersSlice;
+export const { useLoginMutation, useLogoutMutation, useRegisterMutation, useProfileQuery, useGetUsersQuery, useDeleteUserMutation, useGetUserDetailsQuery, useUpdateUserMutation } = usersSlice;

@@ -17,7 +17,7 @@ export const LoginScreen = () => {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
 
-  const [login, {isLoading}] = useLoginMutation()
+  const [login, { isLoading }] = useLoginMutation()
 
   const { search } = useLocation()
   const searchParams = new URLSearchParams(search) // Get the query string

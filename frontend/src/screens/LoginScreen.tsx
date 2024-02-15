@@ -39,7 +39,7 @@ export const LoginScreen = () => {
     try {
       const result = await login({ email, password }).unwrap()
       dispatch(setCredentials({ ...result }));
-      navigate('/')
+      navigate(redirectTo)
     } catch (err) {
       console.log(`Error: ${JSON.stringify(err)}`)
       // TODO: Notify user of error

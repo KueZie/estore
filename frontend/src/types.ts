@@ -29,6 +29,15 @@ export type CartState = {
   shippingPrice: string;
   taxPrice: string;
   totalPrice: string;
+  shippingAddress: ShippingAddress;
+  paymentMethod: 'PayPal';
+};
+
+export type ShippingAddress = {
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
 };
 
 export type User = {

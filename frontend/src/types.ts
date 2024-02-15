@@ -46,3 +46,21 @@ export type User = {
   email: string;
   isAdmin: boolean;
 };
+
+// orderItems,
+// shippingAddress,
+// paymentMethod,
+// itemsPrice,
+// taxPrice,
+// shippingPrice,
+// totalPrice
+
+export type Order = {
+  orderItems: CartItem[];
+  shippingAddress: ShippingAddress;
+  paymentMethod: string;
+  itemsPrice: string;
+  taxPrice: string;
+  shippingPrice: string;
+  totalPrice: string;
+};

@@ -14,7 +14,7 @@ export interface ProductInfo {
 // Don't need user, rating, numReviews, or reviews
 export interface CartItem {
   productId: string;
-  quantity: number;
+  qty: number;
   price: number;
   name: string;
   image: string;
@@ -55,7 +55,7 @@ export type User = {
 // shippingPrice,
 // totalPrice
 
-export type Order = {
+export type OrderSubmit = {
   orderItems: CartItem[];
   shippingAddress: ShippingAddress;
   paymentMethod: string;
@@ -64,3 +64,10 @@ export type Order = {
   shippingPrice: string;
   totalPrice: string;
 };
+
+export type Order = {
+  isPayed: boolean;
+  isDelivered: boolean;
+  payedAt: string;
+  deliveredAt: string;
+} & OrderSubmit;

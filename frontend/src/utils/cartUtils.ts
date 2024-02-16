@@ -13,7 +13,7 @@ export const updateCart = (state: CartState) => {
   // Calculate the items price in whole number (pennies) to avoid issues with
   // floating point number calculations
   const itemsPrice = state.cartItems.reduce(
-    (acc, item) => acc + (item.price * 100 * item.quantity) / 100,
+    (acc, item) => acc + (item.price * 100 * item.qty) / 100,
     0
   );
   state.itemsPrice = addDecimals(itemsPrice);

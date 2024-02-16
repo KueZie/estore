@@ -25,9 +25,9 @@ const CartScreen = () => {
 
   // NOTE: no need for an async function here as we are not awaiting the
   // resolution of a Promise
-  const addToCartHandler = (product: Required<CartItem>, quantity: number) => {
-    console.log(`addToCartHandler: ${JSON.stringify({ ...product, quantity })}`)
-    dispatch(addToCart({ ...product, quantity }));
+  const addToCartHandler = (product: Required<CartItem>, qty: number) => {
+    console.log(`addToCartHandler: ${JSON.stringify({ ...product, qty })}`)
+    dispatch(addToCart({ ...product, qty }));
   };
 
   const removeFromCartHandler = (id: string) => {
@@ -61,7 +61,7 @@ const CartScreen = () => {
                   <Col md={2}>
                     <Form.Control
                       as='select'
-                      value={item.quantity}
+                      value={item.qty}
                       onChange={(e) =>
                         addToCartHandler(item, Number(e.target.value))
                       }
@@ -93,12 +93,12 @@ const CartScreen = () => {
           <ListGroup variant='flush'>
             <ListGroup.Item>
               <h2>
-                Subtotal ({cartItems.reduce((acc: number, item: CartItem) => acc + item.quantity, 0)})
+                Subtotal ({cartItems.reduce((acc: number, item: CartItem) => acc + item.qty, 0)})
                 items
               </h2>
               $
               {cartItems
-                .reduce((acc: number, item: CartItem) => acc + item.quantity * item.price, 0)
+                .reduce((acc: number, item: CartItem) => acc + item.qty * item.price, 0)
                 .toFixed(2)}
             </ListGroup.Item>
             <ListGroup.Item>

@@ -31,7 +31,7 @@ const productSchema = new mongoose.Schema({
   //   ref: "User"
   // },
   _id: {
-    type: String,
+    type: mongoose.Types.ObjectId,
     required: true
   },
   name: {

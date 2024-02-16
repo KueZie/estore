@@ -13,17 +13,17 @@ import { useDispatch } from "react-redux"
 import { addToCart } from "../slices/cartSlice"
 
 const ProductScreen = () => {
-  const { id: productId } = useParams()
-  const [quantity, setQuantity] = useState(1)
+  const { id: productId } = useParams() as { id: string }
+  const [qty, setqty] = useState(1)
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   
-  const { data: product, isLoading, error } = useGetProductByIdQuery(Number(productId))
+  const { data: product, isLoading, error } = useGetProductByIdQuery(productId)
 
   const addToCartHandler = () => {
     if (product === undefined) return
-    dispatch(addToCart({ ...product, quantity }))
+    dispatch(addToCart({ ...product, qty }))
     navigate('/cart')
   }
 
@@ -82,9 +82,9 @@ const ProductScreen = () => {
               {product.countInStock > 0 && (
                 <ListGroup.Item>
                   <Row>
-                    <Col>Quantity</Col>
+                    <Col>qty</Col>
                     <Col>
-                      <Form.Control as='select' value={quantity} onChange={(e) => setQuantity(Number(e.target.value))}>
+                      <Form.Control as='select' value={qty} onChange={(e) => setqty(Number(e.target.value))}>
                         {[...Array(product.countInStock).keys()].map(x => (
                           <option key={x + 1} value={x + 1}>
                             {x + 1}

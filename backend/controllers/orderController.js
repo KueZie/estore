@@ -1,31 +1,26 @@
 import asyncHandler from '../middleware/asyncHandler.js';
-import { Order } from '../models/orderModel.js.js';
+import Order from '../models/orderModel.js';
+import { Product } from '../models/productModel.js';
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = asyncHandler(async (req, res) => {
-  const {
-    orderItems,
-    shippingAddress,
-    paymentMethod,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice
-  } = req.body;
+  const cart = req.body;
+  const { shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice } = cart;
 
-  if (orderItems && orderItems.length === 0) {
+  if (cart.orderItems && cart.orderItems.length === 0) {
     res.status(400);
     throw new Error('No order items');
     return;
   }
-
   const order = new Order({
-    orderItems: orderItems.map(item => ({
-      ...item,
-      product: item._id, // Alias _id to product
-      _id: undefined 
+    orderItems: cart.orderItems.map(item => ({
+      name: item.name,
+      qty: item.qty,
+      image: item.image,
+      price: item.price,
+      product: item._id
     })),
     user: req.user._id,
     shippingAddress,
@@ -35,6 +30,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice
   });
+
+  console.log('order:', order);
 
   const createdOrder = await order.save();
 
@@ -48,6 +45,14 @@ const getUserOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
   res.json(orders);
 });
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Admin
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate('user', 'id name');
+  res.json(orders);
+})
 
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
@@ -73,7 +78,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
       id: req.body.id,
       status: req.body.status,
       update_time: req.body.update_time,
-      email_address: req.body.email_address
+      email_address: req.body.payer.email_address
     };
 
     const updatedOrder = await order.save();
@@ -94,11 +99,11 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
     order.deliveredAt = Date.now();
 
     const updatedOrder = await order.save();
-    res.json(updatedOrder); 
+    res.json(updatedOrder);
   } else {
     res.status(404);
     throw new Error('Order not found');
   }
 });
 
-export { addOrderItems, getUserOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered };
+export { getOrders, addOrderItems, getUserOrders, getOrderById, updateOrderToPaid, updateOrderToDelivered };

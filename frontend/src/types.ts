@@ -66,8 +66,8 @@ export type OrderSubmit = {
 };
 
 export type Order = {
-  isPayed: boolean;
+  isPaid: boolean;
   isDelivered: boolean;
-  payedAt: string;
+  paidAt: string;
   deliveredAt: string;
 } & OrderSubmit;

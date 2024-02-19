@@ -4,6 +4,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import React from 'react';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
+
 function App() {
   return (
     <>
@@ -14,6 +17,7 @@ function App() {
         </Container>
       </main>
       <Footer />
+      <ToastContainer />
     </>
   );
 }

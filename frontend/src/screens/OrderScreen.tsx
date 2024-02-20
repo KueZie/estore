@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { Col, Row, Image, Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { useParams } from 'react-router'
+import { useSelector } from 'react-redux'
 
 import {
   useGetOrderDetailsByIdQuery,
   useGetPaypalClientIdQuery,
-  usePayOrderMutation
+  usePayOrderMutation,
+  useDeliverOrderMutation
 } from '../slices/ordersApiSlice'
 import {
   usePayPalScriptReducer,
@@ -22,14 +24,17 @@ import {
 } from '@paypal/paypal-js'
 import { Order } from '../types'
 import { toast } from 'react-toastify'
+import { RootState } from '../store'
 
 const OrderScreen = () => {
   const { id: orderId } = useParams()
+  const { userInfo } = useSelector((state: RootState) => state.auth)
 
-  const { data: order, isLoading, error } = useGetOrderDetailsByIdQuery(orderId ?? '', { skip: !orderId })
+  const { data: order, isLoading, error, refetch } = useGetOrderDetailsByIdQuery(orderId ?? '', { skip: !orderId })
 
   const { data: paypal, isLoading: isClientIdLoading, error: errorClientId } = useGetPaypalClientIdQuery()
   const [payOrder, { isLoading: loadingPayOrder }] = usePayOrderMutation()
+  const [deliverOrder, { isLoading: loadingDeliverOrder }] = useDeliverOrderMutation()
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer()
 
@@ -39,6 +44,7 @@ const OrderScreen = () => {
         console.log('Transaction completed by ' + (details.payer.name?.given_name ?? 'Unknown'))
         // Call server to save the transaction
         payOrder({ orderId: orderId as string, details })
+        refetch()
         toast.success('Order paid successfully.')
       })
     } else {
@@ -61,6 +67,7 @@ const OrderScreen = () => {
         purchase_units: []
       }
     })
+    refetch()
     toast.success('Order paid successfully.')
   }
 
@@ -78,6 +85,19 @@ const OrderScreen = () => {
       ]
     })
     return orderId
+  }
+
+  const deliverOrderHandler = async () => {
+    if (order) {
+      try {
+        await deliverOrder(order._id)
+        refetch()
+        toast.success('Order delivered successfully')
+      } catch (error) {
+        console.error(error)
+        toast.error('Failed to deliver order')
+      }
+    }
   }
 
 
@@ -186,18 +206,28 @@ const OrderScreen = () => {
                   </Row>
                 </ListGroup.Item>
                 <ListGroup.Item>
-                  <Button
-                    style={{ marginBottom: '10px' }}
-                    onClick={onApproveTest}
-                  >
-                    Test Pay Order
-                  </Button>
-                  <div>
-                    <PayPalButtons
-                      createOrder={createOrder}
-                      onApprove={onApprove}
-                    ></PayPalButtons>
-                  </div>
+                  {!loadingDeliverOrder && order.isPaid && !order.isDelivered && userInfo?.isAdmin && (
+                    <Button
+                      style={{ marginBottom: '10px', marginLeft: '10px' }}
+                      onClick={deliverOrderHandler}
+                    >
+                      Deliver Order
+                    </Button>
+                  )}
+                  {!loadingPayOrder && !order.isPaid && (
+                    <>
+                      <Button
+                        style={{ marginBottom: '10px' }}
+                        onClick={onApproveTest}
+                      >
+                        Test Pay Order
+                      </Button>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                        ></PayPalButtons>
+                    </>
+                  )}
                 </ListGroup.Item>
               </ListGroup>
             </Col>

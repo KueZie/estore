@@ -29,6 +29,9 @@ const ordersSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+    getUserOrders: builder.query<Order[], void>({
+      query: () => '/orders/myorders',
+    })
   })
 });
 
@@ -36,5 +39,6 @@ export const {
   useCreateOrderMutation,
   useGetOrderDetailsByIdQuery,
   useGetPaypalClientIdQuery,
-  usePayOrderMutation
+  usePayOrderMutation,
+  useGetUserOrdersQuery
 } = ordersSlice;

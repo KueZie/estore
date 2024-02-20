@@ -66,8 +66,11 @@ export type OrderSubmit = {
 };
 
 export type Order = {
+  _id: string;
   isPaid: boolean;
   isDelivered: boolean;
   paidAt: string;
   deliveredAt: string;
+  createdAt: string;
+  updatedAt: string;
 } & OrderSubmit;

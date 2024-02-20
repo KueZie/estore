@@ -71,6 +71,7 @@ export type Order = {
   isDelivered: boolean;
   paidAt: string;
   deliveredAt: string;
+  user?: User;
   createdAt: string;
   updatedAt: string;
 } & OrderSubmit;

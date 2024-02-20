@@ -31,7 +31,10 @@ const ordersSlice = apiSlice.injectEndpoints({
     }),
     getUserOrders: builder.query<Order[], void>({
       query: () => '/orders/myorders',
-    })
+    }),
+    getOrders: builder.query<Required<Order>[], void>({
+      query: () => '/orders',
+    }),
   })
 });
 
@@ -40,5 +43,6 @@ export const {
   useGetOrderDetailsByIdQuery,
   useGetPaypalClientIdQuery,
   usePayOrderMutation,
-  useGetUserOrdersQuery
+  useGetUserOrdersQuery,
+  useGetOrdersQuery
 } = ordersSlice;

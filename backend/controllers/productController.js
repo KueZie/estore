@@ -28,8 +28,6 @@ const getProductById = asyncHandler(async (req, res) => {
 // @route   POST /api/products
 // @access  Admin
 const createProduct = asyncHandler(async (req, res) => {
-  console.log('Creating product:', req.body)
-  console.log('req.user:', req.user)
   const product = new Product({
     name: req.body.name,
     price: req.body.price,

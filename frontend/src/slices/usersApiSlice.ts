@@ -9,6 +9,7 @@ const usersSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: { email, password },
       }),
+      invalidatesTags: ['User'],
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
@@ -29,7 +30,8 @@ const usersSlice = apiSlice.injectEndpoints({
         url: '/users/profile',
         method: 'POST',
         body: data
-      })
+      }),
+      providesTags: ['User'],
     }),
     getUsers: builder.query<User[], void>({
       query: () => '/users',
@@ -45,12 +47,13 @@ const usersSlice = apiSlice.injectEndpoints({
     getUserDetails: builder.query<User, string>({
       query: (id) => `/users/${id}`,
     }),
-    updateUser: builder.mutation<User, {id: string, name: string, email: string}>({
-      query: ({ id, name, email }) => ({
-        url: `/users/${id}`,
+    updateUser: builder.mutation<User, User>({
+      query: ({ _id, email, isAdmin, name }) => ({
+        url: `/users/${_id}`,
         method: 'PUT',
-        body: { name, email },
-      })
+        body: { name, email, isAdmin, _id },
+      }),
+      invalidatesTags: ['User'],
     }),
   }),
 });

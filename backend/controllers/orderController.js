@@ -22,7 +22,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       price: item.price,
       product: item._id
     })),
-    user: req.user._id,
+    user: req.__user._id,
     shippingAddress,
     paymentMethod,
     itemsPrice,
@@ -30,8 +30,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice
   });
-
-  console.log('order:', order);
 
   const createdOrder = await order.save();
 
@@ -42,7 +40,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @route   GET /api/orders
 // @access  Private - only users who placed the order can access or admin
 const getUserOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
+  const orders = await Order.find({ user: req.__user._id });
   res.json(orders);
 });
 

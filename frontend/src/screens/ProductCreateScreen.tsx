@@ -9,17 +9,16 @@ import { toast } from 'react-toastify'
 
 const ProductCreateScreen = () => {
   const { id } = useParams() as { id: string }
-  const { data: productDetails, isLoading, error } = useGetProductByIdQuery(id)
   const [createProduct, { isLoading: loadingUpdate, error: errorUpdate }] = useCreateProductMutation()
   const [uploadProductImage, { isLoading: loadingUpload, error: errorUpload }] = useUploadProductImageMutation()
 
-  const [name, setName] = useState(productDetails?.name || '')
-  const [price, setPrice] = useState(productDetails?.price || 0)
-  const [image, setImage] = useState(productDetails?.image || '')
-  const [brand, setBrand] = useState(productDetails?.brand || '')
-  const [category, setCategory] = useState(productDetails?.category || '')
-  const [countInStock, setCountInStock] = useState(productDetails?.countInStock || 0)
-  const [description, setDescription] = useState(productDetails?.description || '')
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState(0)
+  const [image, setImage] = useState('')
+  const [brand, setBrand] = useState('')
+  const [category, setCategory] = useState('')
+  const [countInStock, setCountInStock] = useState(0)
+  const [description, setDescription] = useState('')
 
   const navigate = useNavigate()
 
@@ -47,13 +46,10 @@ const ProductCreateScreen = () => {
 
   return (
     <>
-      <div>ProductCreateScreen</div>
+      <div>ProductEditScreen</div>
       <FormContainer>
         <h1>Edit Product</h1>
-        {loadingUpdate && <Loader />}
-        {isLoading ? (
-          <Loader />
-        ) : (
+        {loadingUpdate ? <Loader /> : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='name'>
               <Form.Label>Name</Form.Label>

@@ -13,11 +13,10 @@ export const protect = asyncHandler(async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log('decoded:', decoded);
 
-    req.user = await User.findById(decoded.userId).select('-password');
+    req.__user = await User.findById(decoded.userId).select('-password');
 
-    console.log('req.user:', req.user);
+    console.log('[protect] req.user:', req.__user.email);
 
     next();
   } catch (error) {
@@ -28,7 +27,8 @@ export const protect = asyncHandler(async (req, res, next) => {
 });
 
 export const admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  console.log('Checking if user is admin:', req.__user);
+  if (req.__user && req.__user.isAdmin) {
     next();
   } else {
     res.status(401);

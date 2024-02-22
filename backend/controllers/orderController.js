@@ -49,6 +49,7 @@ const getUserOrders = asyncHandler(async (req, res) => {
 // @access  Admin
 const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({}).populate('user', 'id name');
+  console.log(orders);
   res.json(orders);
 })
 

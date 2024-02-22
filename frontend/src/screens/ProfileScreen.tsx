@@ -11,6 +11,7 @@ import { toast } from 'react-toastify'
 import { useGetUserOrdersQuery } from '../slices/ordersApiSlice'
 import { Order } from '../types'
 import { FaCheckCircle, FaTimes, FaTimesCircle } from 'react-icons/fa'
+import { useUpdateUserMutation } from '../slices/usersApiSlice'
 
 const ProfileScreen = () => {
   const dispatch = useDispatch()
@@ -22,6 +23,7 @@ const ProfileScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const { data: orders, isLoading, error } = useGetUserOrdersQuery()
+  const [updateUser, { isLoading: loadingUpdate, error: errorUpdate }] = useUpdateUserMutation()
 
   useEffect(() => {
     if (!userInfo) {
@@ -30,21 +32,30 @@ const ProfileScreen = () => {
     }
   }, [userInfo])
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Dispatch update user action
-    dispatch(setCredentials({ ...userInfo, name, email }))
+
     if (password !== confirmPassword) {
       toast.error('Passwords do not match')
+      return;
     }
 
+    try {
+      const updatedUser = await updateUser({ _id: userInfo?._id, name, email, password }).unwrap()
+      toast.success('User updated')
+      // Dispatch update user action
+      dispatch(setCredentials({ ...updatedUser }))
+    } catch (error) {
+      toast.error('Error updating user')
+      return;
+    }
   }
 
   return (
     <Row>
       <Col md={3}>
         <h2>User Profile</h2>
-        <Form>
+        <Form onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -133,11 +144,6 @@ const ProfileScreen = () => {
           </tbody>
         </Table>
       </Col>
-      
-          
-
-
-
     </Row>
   )
 }

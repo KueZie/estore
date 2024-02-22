@@ -3,12 +3,27 @@ import { useGetUsersQuery } from '../slices/usersApiSlice'
 import { Button, Table } from 'react-bootstrap'
 import Loader from '../components/Loader'
 import { LinkContainer } from 'react-router-bootstrap'
-import { FaCheck, FaEdit } from 'react-icons/fa'
+import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa'
+import { useDeleteUserMutation } from '../slices/usersApiSlice'
+import { toast } from 'react-toastify'
 
 const UsersListScreen = () => {
   const { data: users, isLoading, error } = useGetUsersQuery()
+  const [deleteUser] = useDeleteUserMutation()
 
-  console.log(users)
+  const deleteHandler = async (id: string) => {
+    if (!window.confirm('Are you sure?')) {
+      return
+    }
+
+    try {
+      const payload = await deleteUser(id).unwrap()
+      toast.success('User deleted')
+    } catch (error) {
+      toast.error('Error deleting user')
+      console.error(error)
+    }
+  }
 
   return (
     <>
@@ -22,6 +37,7 @@ const UsersListScreen = () => {
             <th>NAME</th>
             <th>EMAIL</th>
             <th>ADMIN</th>
+            <th></th>
             <th></th>
           </tr>
         </thead>
@@ -40,6 +56,11 @@ const UsersListScreen = () => {
                     <FaEdit />
                   </Button>
                 </LinkContainer>
+              </td>
+              <td>
+                <Button className='btn-sm' variant='danger' onClick={() => deleteHandler(user._id)}>
+                  <FaTrash />
+                </Button>
               </td>
             </tr>))}
         </tbody>

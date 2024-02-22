@@ -58,7 +58,14 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
-  res.send('Delete user');
+  const returnPayload = await User.findByIdAndDelete(req.params.id);
+
+  if (returnPayload) {
+    res.status(200).json({ message: 'User removed' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
 })
 
 
@@ -72,19 +79,23 @@ const updateUser = asyncHandler(async (req, res) => {
   console.log('updated by: ', req.__user.email)
 
   if (userToUpdate) {
-    userToUpdate.name = req.body.name || userToUpdate.name;
-    if (req.body.email !== userToUpdate.email) { // Only update email if it's different
+    if (req.body.name) {
+      userToUpdate.name = req.body.name;
+    }
+    if (req.body.email !== userToUpdate.email && req.body.email) { // Only update email if it's different
       userToUpdate.email = req.body.email;
     }
     if (req.body.password) { // Only update password if it was provided
       userToUpdate.password = req.body.password;
     }
 
-    if (req.__user.isAdmin) { // Only admin can update isAdmin
+    if (req.__user.isAdmin && req.body.isAdmin !== undefined) { // Only admin can update isAdmin
       userToUpdate.isAdmin = req.body.isAdmin;
     }
 
+    console.log('updatedUser:', userToUpdate)
     const updatedUser = await userToUpdate.save();
+
 
     // If the user is updating their own profile, update the token in the cookie
     if (req.__user._id.toString() === updatedUser._id.toString()) {

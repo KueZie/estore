@@ -52,6 +52,10 @@ export type User = {
   isAdmin: boolean;
 };
 
+export type UserWithPassword = User & {
+  password: string;
+};
+
 // orderItems,
 // shippingAddress,
 // paymentMethod,

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import bcrypt from "bcryptjs";
+import Order from "./orderModel.js";
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -29,6 +30,12 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// Cascade delete orders when a user is deleted
+userSchema.pre('deleteOne', { document: false, query: true }, async function() {
+  const doc = await this.model.findOne(this.getFilter());
+  await Order.deleteMany({ user: doc._id });
+});
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {

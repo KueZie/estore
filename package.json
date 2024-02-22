@@ -24,6 +24,7 @@
     "react-toastify": "^10.0.4"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.11.97",
     "concurrently": "^8.2.2",
     "nodemon": "^3.0.3"
   }

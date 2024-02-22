@@ -1,4 +1,4 @@
-import { User } from "../types";
+import { User, UserWithPassword } from "../types";
 import { apiSlice } from "./apiSlice";
 
 const usersSlice = apiSlice.injectEndpoints({
@@ -46,12 +46,13 @@ const usersSlice = apiSlice.injectEndpoints({
     }),
     getUserDetails: builder.query<User, string>({
       query: (id) => `/users/${id}`,
+      providesTags: ['User'],
     }),
-    updateUser: builder.mutation<User, User>({
-      query: ({ _id, email, isAdmin, name }) => ({
+    updateUser: builder.mutation<User, Partial<UserWithPassword>>({
+      query: ({ _id, email, isAdmin, name, password }) => ({
         url: `/users/${_id}`,
         method: 'PUT',
-        body: { name, email, isAdmin, _id },
+        body: { name, email, isAdmin, _id, password },
       }),
       invalidatesTags: ['User'],
     }),

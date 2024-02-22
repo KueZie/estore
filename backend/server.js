@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 dotenv.config();
 
 import cookieParser from 'cookie-parser';
@@ -38,6 +39,8 @@ app.use('/api/config/paypal', (req, res) => res.send({ clientId: process.env.PAY
 
 const __dirname = path.resolve(); // Set __dirname to the current working directory
 app.use('/uploads', express.static(path.join(__dirname, '/uploads'))); // Make uploads folder static
+
+console.log(path.join(__dirname, '/uploads'))
 
 app.use(notFound); 
 app.use(errorHandler); 

@@ -5,9 +5,11 @@ export const productSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query<ProductInfo[], void>({
       query: () => '/products',
+      providesTags: ['Product'],
     }),
     getProductById: builder.query<ProductInfo, string>({
       query: (id) => `/products/${id}`,
+      providesTags: ['Product'],
     }),
     createProduct: builder.mutation<ProductInfo, ProductInfo>({
       query: (product) => ({
@@ -15,6 +17,7 @@ export const productSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: product,
       }),
+      invalidatesTags: ['Product'],
     }),
     updateProduct: builder.mutation<ProductInfo, Partial<ProductInfo>>({ // Needs id
       query: (product) => ({
@@ -22,12 +25,14 @@ export const productSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: product,
       }),
+      invalidatesTags: ['Product'],
     }),
     deleteProduct: builder.mutation<void, string>({
       query: (id) => ({
         url: `/products/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Product'],
     }),
   }),
 });

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useGetOrderDetailsByIdQuery } from '../slices/ordersApiSlice'
 import { FormContainer } from '../components/FormContainer'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -10,18 +9,16 @@ import { toast } from 'react-toastify'
 
 const ProductEditScreen = () => {
   const { id } = useParams() as { id: string }
-  const { data: productDetails, isLoading, error } = useGetProductByIdQuery(id)
   const [updateProduct, { isLoading: loadingUpdate, error: errorUpdate }] = useUpdateProductMutation()
+  const { data: productDetails, isLoading, error } = useGetProductByIdQuery(id)
 
-  const [name, setName] = useState(productDetails?.name || '')
-  const [price, setPrice] = useState(productDetails?.price || 0)
-  const [image, setImage] = useState(productDetails?.image || '')
-  const [brand, setBrand] = useState(productDetails?.brand || '')
-  const [category, setCategory] = useState(productDetails?.category || '')
-  const [countInStock, setCountInStock] = useState(productDetails?.countInStock || 0)
-  const [description, setDescription] = useState(productDetails?.description || '')
-
-  const navigate = useNavigate()
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState(0)
+  const [image, setImage] = useState('')
+  const [brand, setBrand] = useState('')
+  const [category, setCategory] = useState('')
+  const [countInStock, setCountInStock] = useState(0)
+  const [description, setDescription] = useState('')
 
   useEffect(() => {
     setName(productDetails?.name || '')
@@ -32,6 +29,9 @@ const ProductEditScreen = () => {
     setCountInStock(productDetails?.countInStock || 0)
     setDescription(productDetails?.description || '')
   }, [productDetails])
+
+
+  const navigate = useNavigate()
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -45,13 +45,8 @@ const ProductEditScreen = () => {
       <div>ProductEditScreen</div>
       <FormContainer>
         <h1>Edit Product</h1>
-        {loadingUpdate && <Loader />}
-        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
-        {isLoading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant='danger'>{error}</Message>
-        ) : (
+        {loadingUpdate ? <Loader /> :
+        errorUpdate ? <Message variant='danger'>{errorUpdate}</Message> : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='name'>
               <Form.Label>Name</Form.Label>
@@ -65,7 +60,7 @@ const ProductEditScreen = () => {
             <Form.Group controlId='price'>
               <Form.Label>Price</Form.Label>
               <Form.Control
-                type='number'
+                type='float'
                 placeholder='Enter price'
                 value={price}
                 onChange={(e) => setPrice(parseInt(e.target.value))}

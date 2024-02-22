@@ -11,6 +11,11 @@ export interface ProductInfo {
   numReviews: number;
 }
 
+export interface ProductCreate extends Omit<ProductInfo, '_id' | 'rating' | 'numReviews'> {}
+export interface ProductUpdate extends Partial<ProductInfo> {
+  _id: string;
+}
+
 // Don't need user, rating, numReviews, or reviews
 export interface CartItem {
   productId: string;

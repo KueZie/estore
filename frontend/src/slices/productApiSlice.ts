@@ -3,10 +3,10 @@ import { PaginatedProductResult, ProductCreate, ProductInfo, ProductUpdate } fro
 
 export const productSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<PaginatedProductResult, { pageNumber?: number }>({
-      query: ({ pageNumber }) => ({
+    getProducts: builder.query<PaginatedProductResult, { pageNumber?: number, keyword?: string }>({
+      query: ({ pageNumber, keyword }) => ({
         url: `/products`,
-        params: { pageNumber: pageNumber || 1 },
+        params: { pageNumber: pageNumber || 1, keyword: keyword || '' },
       }),
       providesTags: ['Product'],
     }),

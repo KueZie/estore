@@ -7,9 +7,19 @@ import { Product } from '../models/productModel.js';
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 8;
   const page = Number(req.query.pageNumber) || 1;
-  const count = await Product.countDocuments({});
+  const keywordFilter = req.query.keyword ? 
+    {
+      // $regex is a MongoDB operator that matches values based on a pattern, and $options: 'i' makes the search case-insensitive
+      // So, this query will return all products that have the keyword in their name
+      name: {
+        $regex: req.query.keyword,
+        $options: 'i'
+      }
+    }
+    : {};
+  const count = await Product.countDocuments(keywordFilter);
   const products = await Product
-                          .find({})
+                          .find(keywordFilter)
                           .limit(pageSize)
                           .skip(pageSize * (page - 1));
   res.json({ products, page, pages: Math.ceil(count / pageSize) });

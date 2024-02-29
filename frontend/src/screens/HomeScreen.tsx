@@ -7,14 +7,16 @@ import { SerializedError } from '@reduxjs/toolkit'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import ProductPaginate from '../components/ProductPaginate'
+import SearchBox from '../components/SearchBox'
 
 
 const HomeScreen = () => {
-  const { pageNumber } = useParams()
-  const { data: pagination, isLoading, error, refetch } = useGetProductsQuery({ pageNumber: parseInt(pageNumber || '1') })
+  const { pageNumber, keyword } = useParams()
+  const { data: pagination, isLoading, error, refetch } = useGetProductsQuery({ pageNumber: parseInt(pageNumber || '1'), keyword })
 
-
-  console.log('pagination', pagination)
+  if (pagination && pageNumber && parseInt(pageNumber) > pagination.pages) {
+    return <Message variant='danger'>Page not found</Message>
+  }
 
   return (
     <>
@@ -24,7 +26,11 @@ const HomeScreen = () => {
           </Message>)
           : pagination?.products === undefined ? (<Message variant='danger'>No products found</Message>)
           : (<>
-        <h1>Latest Products</h1>
+        
+        <Row>
+          <Col><h1>Latest Products</h1></Col>
+          <Col><SearchBox /></Col>
+        </Row>
         <Row>
           {pagination?.products.map(product => (
             <Col sm={12} md={6} lg={4} xl={3} key={product._id}>

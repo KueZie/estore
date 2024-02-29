@@ -1,7 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
-dotenv.config();
+
+if (process.env.NODE_ENV !== 'production')
+  dotenv.config();
 
 import cookieParser from 'cookie-parser';
 
@@ -34,23 +36,22 @@ app.use('/api/upload', uploadRouter);
 app.use('/api/config/paypal', (req, res) => res.send({ clientId: process.env.PAYPAL_CLIENT_ID })); // PayPal Client ID
 
 const __dirname = path.resolve(); // Set __dirname to the current working directory
-app.use('/uploads', express.static(path.join(__dirname, '/uploads'))); // Make uploads folder static for development
 
 if (process.env.NODE_ENV === 'production') {
+  app.use('/uploads', express.static('/var/data/uploads')); // Make uploads folder static for production (images
   app.use(express.static(path.join(__dirname, '/frontend/build'))); // Set frontend build folder as static
   app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))); // Load index.html for any route not found
 } else {
+  app.use('/uploads', express.static(path.join(__dirname, '/uploads'))); // Make uploads folder static for development
   app.get('/', (req, res) => {
     res.send('API is running...')
   })
 }
-
-console.log(path.join(__dirname, '/uploads'))
 
 app.use(notFound); 
 app.use(errorHandler); 
 
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
+  console.log(`Server running in ${process.env.NODE_ENV} on port ${port}.`)
 })

@@ -17,11 +17,11 @@ import { protect, admin } from '../middleware/authMiddleware.js';
 router
   .get('/', getProducts)
   .post('/', protect, admin, createProduct);
+router.route('/top').get(getTopProducts);
 router
   .get('/:id', getProductById)
   .put('/:id', protect, admin, updateProduct)
   .delete('/:id', protect, admin, deleteProduct);
 router.route('/:id/reviews').post(protect, createProductReview);
-router.route('/top').get(getTopProducts);
 
 export default router;

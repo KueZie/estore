@@ -8,6 +8,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import ProductPaginate from '../components/ProductPaginate'
 import SearchBox from '../components/SearchBox'
+import ProductCarousel from '../components/ProductCarousel'
 
 
 const HomeScreen = () => {
@@ -26,7 +27,7 @@ const HomeScreen = () => {
           </Message>)
           : pagination?.products === undefined ? (<Message variant='danger'>No products found</Message>)
           : (<>
-        
+        <ProductCarousel />
         <Row>
           <Col><h1>Latest Products</h1></Col>
           <Col><SearchBox /></Col>

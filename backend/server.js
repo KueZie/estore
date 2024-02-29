@@ -25,10 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.send('API is running...')
-})
-
 // Use productRoutes
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
@@ -38,7 +34,16 @@ app.use('/api/upload', uploadRouter);
 app.use('/api/config/paypal', (req, res) => res.send({ clientId: process.env.PAYPAL_CLIENT_ID })); // PayPal Client ID
 
 const __dirname = path.resolve(); // Set __dirname to the current working directory
-app.use('/uploads', express.static(path.join(__dirname, '/uploads'))); // Make uploads folder static
+app.use('/uploads', express.static(path.join(__dirname, '/uploads'))); // Make uploads folder static for development
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build'))); // Set frontend build folder as static
+  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))); // Load index.html for any route not found
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...')
+  })
+}
 
 console.log(path.join(__dirname, '/uploads'))
 

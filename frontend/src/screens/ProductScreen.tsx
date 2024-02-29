@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { addToCart } from "../slices/cartSlice"
 import { RootState } from "../store"
 import { toast } from "react-toastify"
+import Meta from "../components/Meta"
 
 const ProductScreen = () => {
   const { id: productId } = useParams() as { id: string }
@@ -58,6 +59,7 @@ const ProductScreen = () => {
         : error ? (<Message variant='danger'>{(error as SerializedError)?.message}</Message>)
           : product === undefined ? (<Message variant='danger'>Product not found</Message>)
             : (<>
+              <Meta title={product.name} description={product.description} />
               <Link className='btn btn-light my-3' to='/'>
                 Go Back
               </Link>

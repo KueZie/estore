@@ -75,9 +75,6 @@ const deleteUser = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const userToUpdate = await User.findById(req.params.id);
 
-  console.log('userToUpdate:', userToUpdate)
-  console.log('updated by: ', req.__user.email)
-
   if (userToUpdate) {
     if (req.body.name) {
       userToUpdate.name = req.body.name;

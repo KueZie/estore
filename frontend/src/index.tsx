@@ -14,6 +14,8 @@ import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 
 import reportWebVitals from './reportWebVitals';
+
+import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import CartScreen from './screens/CartScreen';
 import { LoginScreen } from './screens/LoginScreen';
@@ -67,12 +69,14 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      {/* @ts-ignore  */}
-      <PayPalScriptProvider deferLoading={true}>
-        <RouterProvider router={router} />
-      </PayPalScriptProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        {/* @ts-ignore  */}
+        <PayPalScriptProvider deferLoading={true}>
+          <RouterProvider router={router} />
+        </PayPalScriptProvider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );
 

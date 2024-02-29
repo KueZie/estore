@@ -12,11 +12,12 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { FaEdit, FaTrash, FaTrashAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useParams } from 'react-router-dom'
+import ProductPaginate from '../components/ProductPaginate'
 
 export const ProductListScreen = () => {
   const { pageNumber } = useParams()
 
-  const { data: pagination, isLoading, error, refetch } = useGetProductsQuery({ pageNumber: parseInt(pageNumber as string) })
+  const { data: pagination, isLoading, error, refetch } = useGetProductsQuery({ pageNumber: parseInt(pageNumber || '1') })
 
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation()
 
@@ -84,6 +85,13 @@ export const ProductListScreen = () => {
           )}
         </tbody>
       </Table>
+      {pagination && (
+        <ProductPaginate 
+          pages={pagination.pages}
+          page={pagination.page}
+          redirectBaseUrl='/admin/productlist/page/'
+        />
+      )}
     </>
   )
 }

@@ -6,10 +6,11 @@ interface ProductPaginateProps {
   page: number;
   keyword?: string;
   isAdmin?: boolean;
+  redirectBaseUrl?: string;
 }
 
 const ProductPaginate = (props: ProductPaginateProps) => {
-  const { pages, page, keyword = '', isAdmin = false } = props;
+  const { pages, page, keyword = '', isAdmin = false, redirectBaseUrl = '/page/' } = props;
 
   if (pages === 1) {
     return <></>
@@ -20,7 +21,7 @@ const ProductPaginate = (props: ProductPaginateProps) => {
       {[...Array(pages).keys()].map(x => (
         <LinkContainer
           key={x + 1}
-          to={`/page/${x + 1}`}
+          to={`${redirectBaseUrl}${x + 1}`}
         >
           <Pagination.Item active={x + 1 === page}>
             {x + 1}

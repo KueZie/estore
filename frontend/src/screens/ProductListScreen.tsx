@@ -11,10 +11,12 @@ import { Button, Col, Row, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { FaEdit, FaTrash, FaTrashAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
+import { useParams } from 'react-router-dom'
 
 export const ProductListScreen = () => {
+  const { pageNumber } = useParams()
 
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery()
+  const { data: pagination, isLoading, error, refetch } = useGetProductsQuery({ pageNumber: parseInt(pageNumber as string) })
 
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation()
 
@@ -58,7 +60,7 @@ export const ProductListScreen = () => {
               <td>{error.toString()}</td>
             </tr>
           ) : (
-            products?.map((product) => (
+            pagination?.products?.map((product) => (
               <tr key={product._id}>
                 <td>{product._id}</td>
                 <td>{product.name}</td>

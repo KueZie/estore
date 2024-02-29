@@ -1,3 +1,20 @@
+export interface PaginatedProductResult {
+  products: ProductInfo[];
+  page: number;
+  pages: number;
+}
+
+export interface Review {
+  _id: string;
+  user: {
+    name: string;
+  };
+  name: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 export interface ProductInfo {
   _id: string;
   name: string;
@@ -9,6 +26,7 @@ export interface ProductInfo {
   countInStock: number;
   rating: number;
   numReviews: number;
+  reviews: Review[];
 }
 
 export interface ProductCreate extends Omit<ProductInfo, '_id' | 'rating' | 'numReviews'> {}

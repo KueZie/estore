@@ -1,10 +1,13 @@
 import { apiSlice } from "./apiSlice";
-import { ProductCreate, ProductInfo, ProductUpdate } from "../types";
+import { PaginatedProductResult, ProductCreate, ProductInfo, ProductUpdate } from "../types";
 
 export const productSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<ProductInfo[], void>({
-      query: () => '/products',
+    getProducts: builder.query<PaginatedProductResult, { pageNumber?: number }>({
+      query: ({ pageNumber }) => ({
+        url: `/products`,
+        params: { pageNumber: pageNumber || 1 },
+      }),
       providesTags: ['Product'],
     }),
     getProductById: builder.query<ProductInfo, string>({
@@ -41,6 +44,14 @@ export const productSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Product'],
     }),
+    createReview: builder.mutation<{ message?: string }, { productId: string, rating: number, comment: string }>({
+      query: ({ productId, rating, comment }) => ({
+        url: `/products/${productId}/reviews`,
+        method: 'POST',
+        body: { rating, comment },
+      }),
+      invalidatesTags: ['Product'],
+    }),
   }),
 });
 
@@ -51,4 +62,5 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
   useUploadProductImageMutation,
+  useCreateReviewMutation
 } = productSlice;

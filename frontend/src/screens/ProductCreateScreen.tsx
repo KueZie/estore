@@ -24,7 +24,7 @@ const ProductCreateScreen = () => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await createProduct({ name, price, image, brand, category, countInStock, description })
+    await createProduct({ name, price, image, brand, category, countInStock, description, reviews: [] })
     toast.success('Product created')
     navigate('/admin/productlist')
   }

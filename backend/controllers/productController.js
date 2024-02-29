@@ -5,16 +5,21 @@ import { Product } from '../models/productModel.js';
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
+  const count = await Product.countDocuments({});
+  const products = await Product
+                          .find({})
+                          .limit(pageSize)
+                          .skip(pageSize * (page - 1));
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product
 // @route   GET /api/product/:id
 // @access  Public
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  console.log('product:', product)
+  const product = await Product.findById(req.params.id).populate('reviews.user', 'name');
 
   if (product) {
     res.json(product);
@@ -94,10 +99,42 @@ const deleteProduct = asyncHandler(async (req, res) => {
   res.status(404).json({ message: `Cannot delete Product with id=${id}. Maybe Product was not found!` });
 })
 
+// @desc    Review a product
+// @route   POST /api/products/:id/reviews
+// @access  Private
+const createProductReview = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const user = req.__user._id;
+  const { rating, comment } = req.body;
+
+  const review = {
+    user,
+    rating: Number(rating),
+    comment
+  }
+
+  const product = await Product.findById(id);
+  const alreadyReviewed = product.reviews.find(r => r.user.toString() === user.toString());
+
+  if (!alreadyReviewed) {
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+    product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+    await product.save();
+    res.status(201).json({ message: 'Review added' });
+  } else {
+    res.status(400);
+    throw new Error('Product already reviewed');
+  }
+
+})
+
+
 export {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  createProductReview
 };
